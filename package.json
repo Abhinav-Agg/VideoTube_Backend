@@ -1,0 +1,16 @@
+{
+  "name": "practiceprof_backend_project",
+  "version": "1.0.0",
+  "description": "Node Backend Professional Project Purpose on type of youtube.",
+  "main": "index.js",
+  "scripts": {
+    "test": "nodemon index.js"
+  },
+  "keywords": [
+    "javascript",
+    "nodejs",
+    "backend"
+  ],
+  "author": "Abhinav Aggarwal",
+  "license": "ISC"
+}
