@@ -3,8 +3,9 @@
   "version": "1.0.0",
   "description": "Node Backend Professional Project Purpose on type of youtube.",
   "main": "index.js",
+  "type": "module",
   "scripts": {
-    "test": "nodemon index.js"
+    "dev": "nodemon src/index.js"
   },
   "keywords": [
     "javascript",
@@ -12,5 +13,8 @@
     "backend"
   ],
   "author": "Abhinav Aggarwal",
-  "license": "ISC"
+  "license": "ISC",
+  "devDependencies": {
+    "nodemon": "^3.1.4"
+  }
 }
