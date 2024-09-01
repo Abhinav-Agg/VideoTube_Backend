@@ -1,25 +1,17 @@
-import { Sequelize } from "sequelize";
-import config from "../config/config.js";
+import mongoose from 'mongoose';
+import { DB_NAME } from "../constants.js";
+// Like here we are useing env file's data but here not import because we have config in main file.
 
-const sequelize = new Sequelize(
-    config.database,
-    config.username,
-    config.password,
-    {
-        host: config.host,
-        port: config.SQL_PORT,
-        dialect: config.dialect
-    }
-)
-
-// This method used for test connection sequelize with db.
 const dbConnections = async () => {
     try{
-        await sequelize.authenticate();
-        console.log("DATABASE CONNECTED");
+        // mongoose return a object we create a variable.
+        // here it get the MONGODB_URI from process.env
+       const connectionInstance =  await mongoose.connect(`${process.env.MONGODB_URI}/${DB_NAME}`);
+       console.log(`\n Mongo DB Connected !! DB Host : ${connectionInstance.connections[0].host}`);
     }
     catch(err) {
             console.log("DB Connection Failed : ", err.message)
+            process.exit(1);
     }
 };
 
