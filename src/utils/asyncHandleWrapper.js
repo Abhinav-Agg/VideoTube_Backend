@@ -7,6 +7,7 @@ be call returned function.
 // This function creates so that we do not create try catch in every async function, now we call this function and give the other function as parameter in this.
 let asyncHandler = (funcs) => async (req, res, next) => {
     try {
+        console.log(funcs)
         await funcs(req, res, next);
     }
     catch (err) {
@@ -19,7 +20,7 @@ let asyncHandler = (funcs) => async (req, res, next) => {
 
 // Its Basic syntax of higher order function for understanding purpose for above.
 /*
-function asyncHandlerfn(func) {
+function asyncHandler(func) {
     return async function n(req,res,next) {
         try {
             await func(req, res, next);
@@ -34,4 +35,4 @@ function asyncHandlerfn(func) {
 } 
 */
 
-
+export {asyncHandler}

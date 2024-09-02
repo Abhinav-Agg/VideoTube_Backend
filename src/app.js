@@ -18,5 +18,11 @@ app.use(express.static("public"));
 app.use(cookieParser());
 // cookieParser() is another middleware which used where we stored the set data inside the browser or get data which only read by our server only i.e cookies.
 
+// Import route.
+import userRouter from './routes/user_routes.js'
 
-export {app}
+// declaration route
+app.use('/api/v1/users' , userRouter);
+
+
+export default app;
