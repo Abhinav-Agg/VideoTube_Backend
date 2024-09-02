@@ -15,8 +15,11 @@ const storage = multer.diskStorage({
 });
 
 export default uplaod;
-// upload means what type of image will upload single, array(multiple) this type of methods are in upload. Now its middleware only pass this in a function.
-// We know we get the image from multer that's why we use this.
+/*
+-> Upload means what type of image will upload single, array(multiple) this type of methods are in upload. Now its middleware only pass this in a function.
+upload.single() and we add this in a route which means its a middleware then go for next method.
+We know we get the image from multer that's why we use this.
+*/
 
 
 
