@@ -5,9 +5,9 @@ be call returned function.
 */
 
 // This function creates so that we do not create try catch in every async function, now we call this function and give the other function as parameter in this.
-let asyncHandler = (asyncFuncs) => async (req, res, next) => {
+let asyncHandler = (Funcs) => async (req, res, next) => {
     try {
-        await asyncFuncs(req, res, next);
+        await Funcs(req, res, next);
     }
     catch (err) {
         res.status(500).send({
