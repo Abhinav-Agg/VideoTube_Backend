@@ -12,11 +12,13 @@ const videoSchema = new Schema(
             type: String,
             required: true
         },
-        Owner: {
-            // Object Id -> we take this so that we are insert in this more 1 data like Id for user and fullname of user. So it will show these record in object form that's why!.
-            type: Schema.Types.ObjectId,
-            ref: "Users"
-        },
+        Owner: [
+            {
+                // Object Id -> we take this so that we are insert in this more 1 data like Id for user and fullname of user. So it will show these record in object form that's why!.
+                type: Schema.Types.ObjectId,
+                ref: "Users"
+            }
+        ],
         Title: {
             type: String,
             required: true
@@ -26,7 +28,7 @@ const videoSchema = new Schema(
             required: true
         },
         IsDeleted: {
-            type: TINYINT
+            type: Boolean
         },
         Duration: {
             type: Number,  //Cloudinary Url -> We get duration from file data which it returns.

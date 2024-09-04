@@ -2,7 +2,7 @@
 // Here Error is class of NodeJs which used for APi. This type of code used in Industry.
 class ApiError extends Error{
     constructor( statusCode, message = "Something went wrong", errors = [], stack = "" ) {
-        super(this.message)
+        super(message)
         this.statusCode = statusCode
         this.data = null
         this.message = message

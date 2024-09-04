@@ -1,6 +1,6 @@
 import multer from 'multer';
 
-const uplaod = multer({storage});
+let upload;
 
 // storage will upload the file with given name.
 const storage = multer.diskStorage({
@@ -14,7 +14,7 @@ const storage = multer.diskStorage({
     }
 });
 
-export default uplaod;
+export default upload = multer({storage});;
 /*
 -> Upload means what type of image will upload single, array(multiple) this type of methods are in upload. Now its middleware only pass this in a function.
 upload.single() and we add this in a route which means its a middleware then go for next method.
