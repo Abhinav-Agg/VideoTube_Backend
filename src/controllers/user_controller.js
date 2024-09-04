@@ -29,7 +29,7 @@ const registerUser = asyncHandler(async(req,res) => {
     const existingUser = await Users.findOne({
         $or : [{email}, {username}]
     });
-    console.log(existingUser);
+    
     
     if(existingUser) throw new ApiError(409, "User is already existed with this email");
     
@@ -60,7 +60,7 @@ const registerUser = asyncHandler(async(req,res) => {
 
     return res.json(
         new ApiResponse(201, resData)
-    )
+    );
 });
 
 
