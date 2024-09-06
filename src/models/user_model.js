@@ -1,6 +1,9 @@
 import mongoose, { Schema } from "mongoose";
 import bcryptjs from "bcryptjs";
 import jwt from "jsonwebtoken";
+import dotenv from 'dotenv';
+
+const {parsed} = dotenv.config();
 
 const userSchema = new Schema(
     {
@@ -69,10 +72,11 @@ userSchema.pre("save", async function (next) {
 // compare the hashpassword of user with enter user's password. we use bcrypt's compare method. It return true/false.
 userSchema.methods.isValidPassword = async function (password) {
     let isValidPassword = await bcryptjs.compare(password, this.Password);
+    
     return isValidPassword;
 }
 
-userSchema.methods.generateAccessToken = async function () {
+userSchema.methods.generateAccessToken = function () {
     let payload = {
         _id: this._id,
         Email: this.Email,
@@ -84,11 +88,11 @@ userSchema.methods.generateAccessToken = async function () {
         expiresIn: "1h"
     }
 
-    let token = jwt.sign(payload, jwtOptions, process.env.SECRET_ACCESSTOKEN);
+    let token = jwt.sign(payload, process.env.SECRET_ACCESSTOKEN,  jwtOptions);
     return token;
 }
 
-userSchema.methods.generateRefreshToken = async function () {
+userSchema.methods.generateRefreshToken = function () {
     let payload = {
         _id: this._id,
         Email: this.Email,
@@ -100,7 +104,7 @@ userSchema.methods.generateRefreshToken = async function () {
         expiresIn: "1d"
     }
 
-    let token = jwt.sign(payload, jwtOptions, process.env.SECRET_ACCESSTOKEN);
+    let token = jwt.sign(payload, process.env.SECRET_ACCESSTOKEN, jwtOptions);
     return token;
 }
 
