@@ -4,6 +4,7 @@ import { Users } from "../models/user_model.js"
 import { uploadOnCloudinary } from "../service/CloudinaryServcie.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
 import { generateAccessandRefreshToken } from "../utils/commonMethod.js";
+import jwt from 'jsonwebtoken';
 
 const registerUser = asyncHandler(async (req, res) => {
     /*
@@ -40,7 +41,7 @@ const registerUser = asyncHandler(async (req, res) => {
     if (!avatarImageLocalPath) throw new ApiError(400, "Please upload avatar");
 
     // we add this condition beacuse coverImage is not mandatory if user not add it, it will given error. By this we handle error.
-    let coverImageLocalPath = (!(req.files && req.files?.coverImage)) ? "" : req.files?.coverImage[0].path;
+    let coverImageLocalPath = (!(req.files && req.files.coverImage)) ? "" : req.files.coverImage[0].path;
 
     // upload these image in cloudinary.
     const uploadAvatarImageResult = await uploadOnCloudinary(avatarImageLocalPath);
@@ -94,7 +95,6 @@ const loginUser = asyncHandler(async (req, res) => {
 
     // By select method and use this syntax it will remove the columns. Remember add same name of column which we add in model.
     const loggedInUser = await Users.findById(userDetails._id).select("-Password -RefreshToken"); 
-
     
     // here options means -> we secure the cookie which means no one change the cookie from browser. Its handled by only from server.
     const options = {
@@ -150,6 +150,59 @@ const logoutUser = asyncHandler(async (req, res) => {
     )
 });
 
+// This Api used when access token expired so this api will hit from frontend when it get response that access token exipred. 
+// In this we send new access, refresh token on the basis if incoming refresh token will match with user's refresh token in db. then we generate new tokens.
+// This Api hit from frontend when system returns error -> jwt expired and status code on this basis frontend hit this API.
+const refreshAccessToken = asyncHandler(async (req,res) => {
+    let incomingRefreshToken = req.cookies.refreshToken;  // here , we get refresh token.
+
+    if(!incomingRefreshToken) throw new ApiError(401, "Invalid Token");
+
+    try {
+        let decodeToken = jwt.verify(incomingRefreshToken, process.env.SECRET_REFRESHTOKEN);
+    
+        let userDetails = await Users.findById(decodeToken._id);
+    
+        // We add this condition because if any person send suspecious token to enter in sys. but our system check the user in db, if not then we send the error instead to create new token.
+        if(!userDetails) throw new ApiError(401, "Invalid Token");
+    
+        // Now, we check the incoming refresh token with user's refresh token.
+        if(incomingRefreshToken !== userDetails.RefreshToken) throw new ApiError(401, "Invalid Authorization");
+    
+        // if matched we re-generate the token.
+        let {accessToken, refreshToken} = await generateAccessandRefreshToken(userDetails);
+    
+        const options = {
+            httpOnly : true,
+            secure : true
+        }
+    
+        res.status(200)
+        .cookie("accessToken" , accessToken, options)
+        .cookie("refreshToken" , refreshToken, options)
+        .json(
+            new ApiResponse(200, {}, "User token refreshed")
+        )
+
+    } catch (err) {
+        throw new ApiError(500, err.message);
+    }
+
+});
 
 
-export { registerUser, loginUser, logoutUser }
+// This api used for only testing purpose of middleware.
+const checkTokenAccess = asyncHandler(async(req,res) => {
+    let {user, tokenExpiredError} = req;
+    
+    if(user){
+        res.status(200).send(user);
+    }
+
+    if(tokenExpiredError){
+        res.status(401).json(req.tokenExpiredError);
+    }
+})
+
+
+export { registerUser, loginUser, logoutUser, refreshAccessToken, checkTokenAccess }

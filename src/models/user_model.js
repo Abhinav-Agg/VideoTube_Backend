@@ -85,7 +85,7 @@ userSchema.methods.generateAccessToken = function () {
     }
 
     let jwtOptions = {
-        expiresIn: "1h"
+        expiresIn: "5m"
     }
 
     let token = jwt.sign(payload, process.env.SECRET_ACCESSTOKEN,  jwtOptions);

@@ -1,5 +1,5 @@
 import express from 'express';
-import { loginUser, logoutUser, registerUser } from '../controllers/user_controller.js';
+import { checkTokenAccess, loginUser, logoutUser, refreshAccessToken, registerUser } from '../controllers/user_controller.js';
 import upload from '../middlewares/uploadFile.js';
 import { getLoggedInUserDetailFromToken } from '../middlewares/auth.js';
 
@@ -25,5 +25,7 @@ router.route('/register').post(
 
 router.route('/login').post(loginUser);
 router.route('/logout').post(getLoggedInUserDetailFromToken, logoutUser);
+router.route('/refresh-token').post(refreshAccessToken);
+router.route('/checkTokenUser').post(getLoggedInUserDetailFromToken, checkTokenAccess);   // This route is for testing purpose of middleware, when testing will complete, we remove this route.
 
 export default router;
